@@ -25,15 +25,15 @@ echo "  gfx103X - RX 6XXX series"
 read -p "GPU architecture (e.g. gfx120X): " gpu_arch
 
 echo ""
-echo "Installing non-torch dependencies..."
+echo "Installing ROCm torch packages first..."
+uv pip install --index-url "https://rocm.nightlies.amd.com/v2/${gpu_arch}-all/" torch torchaudio torchvision
+uv pip install torchsde
+
+echo ""
+echo "Installing remaining dependencies..."
 grep -v "^torch" requirements.txt > requirements_no_torch.txt
 uv pip install -r requirements_no_torch.txt
 rm requirements_no_torch.txt
-
-echo ""
-echo "Installing ROCm torch packages..."
-uv pip install --index-url "https://rocm.nightlies.amd.com/v2/${gpu_arch}-all/" torch torchaudio torchvision
-uv pip install torchsde
 
 echo ""
 echo "Done. Remotes:"
