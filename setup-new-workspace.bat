@@ -26,7 +26,7 @@ set /p gpu_arch="GPU architecture (e.g. gfx120X): "
 
 echo.
 echo Installing ROCm torch packages first...
-uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ torch torchaudio torchvision
+uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ --index-strategy unsafe-first-match torch torchaudio torchvision
 uv pip install torchsde
 
 echo.
