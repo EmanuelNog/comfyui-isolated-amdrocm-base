@@ -36,6 +36,10 @@ uv pip install -r requirements_no_torch.txt
 rm requirements_no_torch.txt
 
 echo ""
+echo "Verifying ROCm torch is working..."
+.venv/bin/python -c "import torch; print('torch:', torch.__version__); assert torch.cuda.is_available(), 'ROCm NOT working!'; print('ROCm OK - GPU:', torch.cuda.get_device_name(0))" || echo "WARNING: torch.cuda.is_available() returned False - check GPU architecture selection"
+
+echo ""
 echo "Done. Remotes:"
 git remote -v
 
