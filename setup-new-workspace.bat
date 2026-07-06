@@ -14,7 +14,7 @@ git remote set-url --push upstream no_push
 
 echo.
 echo Creating venv...
-uv venv
+uv venv || exit /b
 
 echo.
 echo Choose your GPU architecture:
@@ -26,13 +26,13 @@ set /p gpu_arch="GPU architecture (e.g. gfx120X): "
 
 echo.
 echo Installing ROCm torch packages first...
-uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ --index-strategy unsafe-first-match torch torchaudio torchvision
-uv pip install torchsde
+uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ --index-strategy unsafe-first-match torch torchaudio torchvision || exit /b
+uv pip install torchsde || exit /b
 
 echo.
 echo Installing remaining dependencies...
 findstr /v /b "torch" requirements.txt > requirements_no_torch.txt
-uv pip install -r requirements_no_torch.txt
+uv pip install -r requirements_no_torch.txt || exit /b
 del requirements_no_torch.txt
 
 echo.

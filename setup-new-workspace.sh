@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap 'exit 1' INT
 
 echo "=== ComfyUI Isolated Workspace Setup ==="
 echo ""
