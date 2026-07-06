@@ -38,7 +38,7 @@ del requirements_no_torch.txt
 
 echo.
 echo Verifying ROCm torch is working...
-.venv\Scripts\python -c "import torch; print('torch:', torch.__version__); assert torch.cuda.is_available(), 'ROCm NOT working!'; print('ROCm OK - GPU:', torch.cuda.get_device_name(0))"
+.venv\Scripts\python -c "import torch; print('torch:', torch.__version__); ok = torch.cuda.is_available(); print('ROCm OK - GPU:', torch.cuda.get_device_name(0) if ok else 'NONE'); exit(0 if ok else 1)"
 if errorlevel 1 echo WARNING: torch.cuda.is_available() returned False - check GPU architecture selection
 
 echo.
