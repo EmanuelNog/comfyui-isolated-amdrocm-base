@@ -17,12 +17,13 @@ echo Creating venv...
 uv venv || exit /b
 
 echo.
-echo Choose your GPU architecture:
+echo Choose your GPU architecture (default: gfx120X):
 echo   gfx120X - RX 9070/9060 series
 echo   gfx110X - RX 7XXX series
 echo   gfx1151 - Ryzen AI Max/Strix Halo
 echo   gfx103X - RX 6XXX series
-set /p gpu_arch="GPU architecture (e.g. gfx120X): "
+set gpu_arch=gfx120X
+set /p gpu_arch="GPU architecture (press Enter for default gfx120X): "
 
 echo.
 echo Installing ROCm torch packages first...
