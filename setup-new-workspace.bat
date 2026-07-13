@@ -4,10 +4,20 @@ setlocal enabledelayedexpansion
 echo === ComfyUI Isolated Workspace Setup ===
 echo.
 
-git remote remove origin 2>nul
+if "%~1"=="" (
+    echo Usage: %~nx0 ^<remote_name^> ^<remote_url^>
+    echo e.g.:  %~nx0 my-repo https://github.com/user/repo.git
+    exit /b 1
+)
+if "%~2"=="" (
+    echo Usage: %~nx0 ^<remote_name^> ^<remote_url^>
+    exit /b 1
+)
 
-set /p remote_name="New remote name: "
-set /p remote_url="New remote URL:  "
+set remote_name=%~1
+set remote_url=%~2
+
+git remote remove origin 2>nul
 
 git remote add "%remote_name%" "%remote_url%"
 git remote set-url --push upstream no_push

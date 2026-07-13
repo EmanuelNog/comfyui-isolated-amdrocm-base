@@ -14,17 +14,16 @@ From a clean clone:
 
 **Windows:**
 ```
-setup-new-workspace.bat
+setup-new-workspace.bat <remote_name> <remote_url>
 ```
 
 **Linux:**
 ```
-bash setup-new-workspace.sh
+bash setup-new-workspace.sh <remote_name> <remote_url>
 ```
 
 The script will:
-1. Prompt for your new remote name and URL
-2. Create a Python virtual environment with `uv`
+1. Create a Python virtual environment with `uv`
 3. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
 4. Install remaining ComfyUI dependencies (torch lines filtered out)
 5. Verify ROCm is working (`torch.cuda.is_available()`)

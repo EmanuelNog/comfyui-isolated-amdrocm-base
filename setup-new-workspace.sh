@@ -5,10 +5,16 @@ trap 'exit 1' INT
 echo "=== ComfyUI Isolated Workspace Setup ==="
 echo ""
 
-git remote remove origin 2>/dev/null || true
+if [ $# -lt 2 ]; then
+    echo "Usage: $(basename "$0") <remote_name> <remote_url>"
+    echo "e.g.:  $(basename "$0") my-repo https://github.com/user/repo.git"
+    exit 1
+fi
 
-read -p "New remote name: " remote_name
-read -p "New remote URL:  " remote_url
+remote_name="$1"
+remote_url="$2"
+
+git remote remove origin 2>/dev/null || true
 
 git remote add "$remote_name" "$remote_url"
 git remote set-url --push upstream no_push
