@@ -14,23 +14,23 @@ From a clean clone:
 
 **Windows:**
 ```
-setup-new-workspace.bat <remote_name> <remote_url>
+setup-new-workspace.bat <remote_name> <remote_url> <gpu_arch>
 ```
 
 **Linux:**
 ```
-bash setup-new-workspace.sh <remote_name> <remote_url>
+bash setup-new-workspace.sh <remote_name> <remote_url> <gpu_arch>
 ```
 
 The script will:
 1. Create a Python virtual environment with `uv`
-3. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
-4. Install remaining ComfyUI dependencies (torch lines filtered out)
-5. Verify ROCm is working (`torch.cuda.is_available()`)
-6. Disable push to upstream (fetch-only)
+2. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
+3. Install remaining ComfyUI dependencies (torch lines filtered out)
+4. Verify ROCm is working (`torch.cuda.is_available()`)
+5. Disable push to upstream (fetch-only)
 
-Select the GPU architecture matching your card:
-- `gfx120X` — RX 9070/9060 series *(default)*
+GPU architectures:
+- `gfx120X` — RX 9070/9060 series
 - `gfx110X` — RX 7XXX series
 - `gfx1151` — Ryzen AI Max / Strix Halo
 - `gfx103X` — RX 6XXX series

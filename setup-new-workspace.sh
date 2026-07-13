@@ -5,14 +5,20 @@ trap 'exit 1' INT
 echo "=== ComfyUI Isolated Workspace Setup ==="
 echo ""
 
-if [ $# -lt 2 ]; then
-    echo "Usage: $(basename "$0") <remote_name> <remote_url>"
-    echo "e.g.:  $(basename "$0") my-repo https://github.com/user/repo.git"
+if [ $# -lt 3 ]; then
+    echo "Usage: $(basename "$0") <remote_name> <remote_url> <gpu_arch>"
+    echo "e.g.:  $(basename "$0") my-repo https://github.com/user/repo.git gfx120X"
+    echo "GPU architectures:"
+    echo "  gfx120X - RX 9070/9060 series"
+    echo "  gfx110X - RX 7XXX series"
+    echo "  gfx1151 - Ryzen AI Max/Strix Halo"
+    echo "  gfx103X - RX 6XXX series"
     exit 1
 fi
 
 remote_name="$1"
 remote_url="$2"
+gpu_arch="$3"
 
 git remote remove origin 2>/dev/null || true
 
@@ -29,16 +35,7 @@ echo "Creating venv..."
 uv venv
 
 echo ""
-echo "Choose your GPU architecture (default: gfx120X):"
-echo "  gfx120X - RX 9070/9060 series"
-echo "  gfx110X - RX 7XXX series"
-echo "  gfx1151 - Ryzen AI Max/Strix Halo"
-echo "  gfx103X - RX 6XXX series"
-gpu_arch="gfx120X"
-read -p "GPU architecture (press Enter for default gfx120X): " input
-gpu_arch="${input:-$gpu_arch}"
-
-echo ""
+echo "GPU architecture: $gpu_arch"
 echo "Installing ROCm torch packages first..."
 uv pip install --index-url "https://rocm.nightlies.amd.com/v2/${gpu_arch}-all/" --index-strategy unsafe-first-match torch torchaudio torchvision
 uv pip install torchsde
