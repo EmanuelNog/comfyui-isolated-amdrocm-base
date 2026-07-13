@@ -22,12 +22,13 @@ setup-new-workspace.bat <remote_name> <remote_url> <gpu_arch>
 bash setup-new-workspace.sh <remote_name> <remote_url> <gpu_arch>
 ```
 
-The script will:
-1. Create a Python virtual environment with `uv`
-2. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
-3. Install remaining ComfyUI dependencies (torch lines filtered out)
-4. Verify ROCm is working (`torch.cuda.is_available()`)
-5. Disable push to upstream (fetch-only)
+The script is **idempotent** — re-running it skips already-completed steps. It will:
+1. Set up git remotes (new remote + fetch-only upstream)
+2. Create `custom_nodes/` directory
+3. Create a Python virtual environment with `uv`
+4. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
+5. Install remaining ComfyUI dependencies (torch lines filtered out)
+6. Verify ROCm is working (`torch.cuda.is_available()`)
 
 GPU architectures:
 - `gfx120X` — RX 9070/9060 series
