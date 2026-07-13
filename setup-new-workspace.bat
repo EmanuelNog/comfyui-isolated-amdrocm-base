@@ -11,6 +11,7 @@ set /p remote_url="New remote URL:  "
 
 git remote add "%remote_name%" "%remote_url%"
 git remote set-url --push upstream no_push
+git config merge.ours.driver true
 
 echo.
 echo Creating custom_nodes directory...
