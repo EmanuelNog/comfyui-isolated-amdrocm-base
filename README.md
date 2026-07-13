@@ -31,11 +31,23 @@ The script is **idempotent** — re-running it skips already-completed steps. It
 6. Remove `origin` (protects base repo) and set `upstream` to fetch-only
 7. If `remote_name` and `remote_url` are provided, add that remote
 
+`remote_name` and `remote_url` are optional. Run without them to set up the environment, then re-run with them later to add your remote.
+
 GPU architectures:
 - `gfx120X` — RX 9070/9060 series
 - `gfx110X` — RX 7XXX series
 - `gfx1151` — Ryzen AI Max / Strix Halo
 - `gfx103X` — RX 6XXX series
+
+## First commit and push
+
+After setup, commit the workspace files and push to your remote:
+
+```
+git add -A
+git commit -m "Initial workspace setup"
+git push <remote_name> master
+```
 
 ## Running
 
