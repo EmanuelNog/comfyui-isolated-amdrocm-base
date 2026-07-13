@@ -1,6 +1,8 @@
 # ComfyUI AMD ROCm Base
 
-This is a fork of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) configured as an isolated workspace for **AMD ROCm GPUs** (RX 9070/9060, RX 7XXX, RX 6XXX, Ryzen AI Max).
+This is a fork of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) configured as an isolated self-contained workspace for **AMD ROCm GPUs** (RX 9070/9060, RX 7XXX, RX 6XXX, Ryzen AI Max).
+
+The repository must remain self-contained — all configuration, setup, and runtime scripts live inside the repo. This keeps commit tracking simple and makes the workspace reproducible from a fresh clone.
 
 ## Purpose
 
