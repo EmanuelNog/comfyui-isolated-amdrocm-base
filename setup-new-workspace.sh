@@ -68,10 +68,11 @@ echo "Removing origin to protect base repo..."
 git remote remove origin 2>/dev/null || true
 if [ -n "$remote_name" ]; then
     echo "Adding remote $remote_name -> $remote_url..."
+    git remote remove "$remote_name" 2>/dev/null || true
     git remote add "$remote_name" "$remote_url"
 fi
 echo "Setting upstream to fetch-only..."
-git remote set-url --push upstream no_push
+git remote set-url --push upstream no_push 2>/dev/null || true
 git config merge.ours.driver true
 
 echo ""
