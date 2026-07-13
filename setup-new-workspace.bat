@@ -19,31 +19,47 @@ set remote_name=%~1
 set remote_url=%~2
 set gpu_arch=%~3
 
-git remote remove origin 2>nul
-
-git remote add "%remote_name%" "%remote_url%"
-git remote set-url --push upstream no_push
-git config merge.ours.driver true
-
 echo.
 echo Creating custom_nodes directory...
 if not exist custom_nodes mkdir custom_nodes
 
 echo.
-echo Creating venv...
-uv venv || exit /b
+echo Setting up git remotes...
+git remote remove origin 2>nul 1>&2
+git remote add "%remote_name%" "%remote_url%"
+git remote set-url --push upstream no_push
+git config merge.ours.driver true
+
+if exist .venv\Scripts\python.exe (
+    echo Virtual environment already exists. Skipping.
+) else (
+    echo.
+    echo Creating venv...
+    uv venv || exit /b
+)
 
 echo.
 echo GPU architecture: %gpu_arch%
-echo Installing ROCm torch packages first...
-uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ --index-strategy unsafe-first-match torch torchaudio torchvision || exit /b
-uv pip install torchsde || exit /b
 
-echo.
-echo Installing remaining dependencies...
-findstr /v /b "torch" requirements.txt > requirements_no_torch.txt
-uv pip install -r requirements_no_torch.txt || exit /b
-del requirements_no_torch.txt
+.venv\Scripts\python.exe -c "import torch; assert 'rocm' in torch.__version__, 'no rocm'" 2>nul
+if errorlevel 1 (
+    echo Installing ROCm torch packages...
+    uv pip install --index-url https://rocm.nightlies.amd.com/v2/%gpu_arch%-all/ --index-strategy unsafe-first-match torch torchaudio torchvision || exit /b
+    uv pip install torchsde || exit /b
+) else (
+    echo ROCm torch already installed. Skipping.
+)
+
+.venv\Scripts\python.exe -c "import comfy" 2>nul
+if errorlevel 1 (
+    echo.
+    echo Installing remaining dependencies...
+    findstr /v /b "torch" requirements.txt > requirements_no_torch.txt
+    uv pip install -r requirements_no_torch.txt || exit /b
+    del requirements_no_torch.txt
+) else (
+    echo ComfyUI dependencies already installed. Skipping.
+)
 
 echo.
 echo Verifying ROCm torch is working...

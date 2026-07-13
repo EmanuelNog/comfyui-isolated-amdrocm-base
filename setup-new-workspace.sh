@@ -20,31 +20,45 @@ remote_name="$1"
 remote_url="$2"
 gpu_arch="$3"
 
-git remote remove origin 2>/dev/null || true
-
-git remote add "$remote_name" "$remote_url"
-git remote set-url --push upstream no_push
-git config merge.ours.driver true
-
 echo ""
 echo "Creating custom_nodes directory..."
 mkdir -p custom_nodes
 
 echo ""
-echo "Creating venv..."
-uv venv
+echo "Setting up git remotes..."
+git remote remove origin 2>/dev/null || true
+git remote add "$remote_name" "$remote_url"
+git remote set-url --push upstream no_push
+git config merge.ours.driver true
+
+if [ -f .venv/bin/python ]; then
+    echo "Virtual environment already exists. Skipping."
+else
+    echo ""
+    echo "Creating venv..."
+    uv venv
+fi
 
 echo ""
 echo "GPU architecture: $gpu_arch"
-echo "Installing ROCm torch packages first..."
-uv pip install --index-url "https://rocm.nightlies.amd.com/v2/${gpu_arch}-all/" --index-strategy unsafe-first-match torch torchaudio torchvision
-uv pip install torchsde
 
-echo ""
-echo "Installing remaining dependencies..."
-grep -v "^torch" requirements.txt > requirements_no_torch.txt
-uv pip install -r requirements_no_torch.txt
-rm requirements_no_torch.txt
+if .venv/bin/python -c "import torch; assert 'rocm' in torch.__version__, 'no rocm'" 2>/dev/null; then
+    echo "ROCm torch already installed. Skipping."
+else
+    echo "Installing ROCm torch packages..."
+    uv pip install --index-url "https://rocm.nightlies.amd.com/v2/${gpu_arch}-all/" --index-strategy unsafe-first-match torch torchaudio torchvision
+    uv pip install torchsde
+fi
+
+if .venv/bin/python -c "import comfy" 2>/dev/null; then
+    echo "ComfyUI dependencies already installed. Skipping."
+else
+    echo ""
+    echo "Installing remaining dependencies..."
+    grep -v "^torch" requirements.txt > requirements_no_torch.txt
+    uv pip install -r requirements_no_torch.txt
+    rm requirements_no_torch.txt
+fi
 
 echo ""
 echo "Verifying ROCm torch is working..."
