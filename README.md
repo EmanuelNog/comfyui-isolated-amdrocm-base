@@ -14,12 +14,12 @@ From a clean clone:
 
 **Windows:**
 ```
-setup-new-workspace.bat <remote_name> <remote_url> <gpu_arch>
+setup-new-workspace.bat <gpu_arch> [<remote_name> <remote_url>]
 ```
 
 **Linux:**
 ```
-bash setup-new-workspace.sh <remote_name> <remote_url> <gpu_arch>
+bash setup-new-workspace.sh <gpu_arch> [<remote_name> <remote_url>]
 ```
 
 The script is **idempotent** — re-running it skips already-completed steps. It will:
@@ -28,7 +28,8 @@ The script is **idempotent** — re-running it skips already-completed steps. It
 3. Install ROCm torch, torchvision, torchaudio directly from `https://rocm.nightlies.amd.com`
 4. Install remaining ComfyUI dependencies (torch lines filtered out)
 5. Verify ROCm is working (`torch.cuda.is_available()`)
-6. Set up git remotes (new remote + fetch-only upstream)
+6. Remove `origin` (protects base repo) and set `upstream` to fetch-only
+7. If `remote_name` and `remote_url` are provided, add that remote
 
 GPU architectures:
 - `gfx120X` — RX 9070/9060 series

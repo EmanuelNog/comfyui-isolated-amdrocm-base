@@ -4,9 +4,10 @@ setlocal enabledelayedexpansion
 echo === ComfyUI Isolated Workspace Setup ===
 echo.
 
-if "%~3"=="" (
-    echo Usage: %~nx0 ^<remote_name^> ^<remote_url^> ^<gpu_arch^>
-    echo e.g.:  %~nx0 my-repo https://github.com/user/repo.git gfx120X
+if "%~1"=="" (
+    echo Usage: %~nx0 ^<gpu_arch^> [^<remote_name^> ^<remote_url^>]
+    echo e.g.:  %~nx0 gfx120X
+    echo         %~nx0 gfx120X my-repo https://github.com/user/repo.git
     echo GPU architectures:
     echo   gfx120X - RX 9070/9060 series
     echo   gfx110X - RX 7XXX series
@@ -15,9 +16,14 @@ if "%~3"=="" (
     exit /b 1
 )
 
-set remote_name=%~1
-set remote_url=%~2
-set gpu_arch=%~3
+set gpu_arch=%~1
+if not "%~3"=="" (
+    set remote_name=%~2
+    set remote_url=%~3
+) else (
+    set remote_name=
+    set remote_url=
+)
 
 echo.
 echo Creating custom_nodes directory...
@@ -60,9 +66,13 @@ echo Verifying ROCm torch is working...
 if errorlevel 1 echo WARNING: torch.cuda.is_available() returned False - check GPU architecture selection
 
 echo.
-echo Setting up git remotes...
+echo Removing origin to protect base repo...
 git remote remove origin 2>nul 1>&2
-git remote add "%remote_name%" "%remote_url%"
+if not "%remote_name%"=="" (
+    echo Adding remote "%remote_name%" -> "%remote_url%"...
+    git remote add "%remote_name%" "%remote_url%"
+)
+echo Setting upstream to fetch-only...
 git remote set-url --push upstream no_push
 git config merge.ours.driver true
 
