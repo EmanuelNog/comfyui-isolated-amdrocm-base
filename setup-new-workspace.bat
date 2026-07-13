@@ -23,13 +23,6 @@ echo.
 echo Creating custom_nodes directory...
 if not exist custom_nodes mkdir custom_nodes
 
-echo.
-echo Setting up git remotes...
-git remote remove origin 2>nul 1>&2
-git remote add "%remote_name%" "%remote_url%"
-git remote set-url --push upstream no_push
-git config merge.ours.driver true
-
 if exist .venv\Scripts\python.exe (
     echo Virtual environment already exists. Skipping.
 ) else (
@@ -65,6 +58,13 @@ echo.
 echo Verifying ROCm torch is working...
 .venv\Scripts\python -c "import torch; print('torch:', torch.__version__); ok = torch.cuda.is_available(); print('ROCm OK - GPU:', torch.cuda.get_device_name(0) if ok else 'NONE'); exit(0 if ok else 1)"
 if errorlevel 1 echo WARNING: torch.cuda.is_available() returned False - check GPU architecture selection
+
+echo.
+echo Setting up git remotes...
+git remote remove origin 2>nul 1>&2
+git remote add "%remote_name%" "%remote_url%"
+git remote set-url --push upstream no_push
+git config merge.ours.driver true
 
 echo.
 echo Done. Remotes:

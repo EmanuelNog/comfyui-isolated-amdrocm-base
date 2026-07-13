@@ -24,13 +24,6 @@ echo ""
 echo "Creating custom_nodes directory..."
 mkdir -p custom_nodes
 
-echo ""
-echo "Setting up git remotes..."
-git remote remove origin 2>/dev/null || true
-git remote add "$remote_name" "$remote_url"
-git remote set-url --push upstream no_push
-git config merge.ours.driver true
-
 if [ -f .venv/bin/python ]; then
     echo "Virtual environment already exists. Skipping."
 else
@@ -63,6 +56,13 @@ fi
 echo ""
 echo "Verifying ROCm torch is working..."
 .venv/bin/python -c "import torch; print('torch:', torch.__version__); ok = torch.cuda.is_available(); print('ROCm OK - GPU:', torch.cuda.get_device_name(0) if ok else 'NONE'); exit(0 if ok else 1)" || echo "WARNING: torch.cuda.is_available() returned False - check GPU architecture selection"
+
+echo ""
+echo "Setting up git remotes..."
+git remote remove origin 2>/dev/null || true
+git remote add "$remote_name" "$remote_url"
+git remote set-url --push upstream no_push
+git config merge.ours.driver true
 
 echo ""
 echo "Done. Remotes:"
