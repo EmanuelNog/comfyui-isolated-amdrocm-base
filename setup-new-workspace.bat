@@ -62,7 +62,7 @@ if errorlevel 1 (
 
 echo.
 echo Verifying ROCm torch is working...
-.venv\Scripts\python -c "import torch; print('torch:', torch.__version__); ok = torch.cuda.is_available(); print('ROCm OK - GPU:', torch.cuda.get_device_name(0) if ok else 'NONE'); exit(0 if ok else 1)"
+.venv\Scripts\python.exe -c "import torch; print('torch:', torch.__version__); ok = torch.cuda.is_available(); print('ROCm OK - GPU:', torch.cuda.get_device_name(0) if ok else 'NONE'); exit(0 if ok else 1)"
 if errorlevel 1 echo WARNING: torch.cuda.is_available() returned False - check GPU architecture selection
 
 echo.
@@ -81,5 +81,7 @@ echo.
 echo Done. Remotes:
 git remote -v
 
+echo.
+echo Commit and push to your remote must be done manually.
 echo.
 echo Run with: run.bat

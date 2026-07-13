@@ -80,4 +80,6 @@ echo "Done. Remotes:"
 git remote -v
 
 echo ""
+echo "Commit and push to your remote must be done manually."
+echo ""
 echo "Run with: ./run.sh"
